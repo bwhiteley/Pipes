@@ -9,15 +9,16 @@ import Foundation
 //
 
 public func map<S: SequenceType, T>(f: S.Generator.Element->T)(seq: S) -> [T] {
-    return map(seq, f)
+    return seq.map(f)
 }
 
 public func filter<S: SequenceType>(f: S.Generator.Element->Bool)(seq: S) -> [S.Generator.Element] {
-    return filter(seq, f)
+    return seq.filter(f)
 }
 
+/*
 public func reduce<S : SequenceType, U>(initial: U, @noescape f: (U, S.Generator.Element) -> U)(seq: S) -> U {
-    return reduce(seq, initial, f)
+    return seq.reduce(initial, f)
 }
 
 //
@@ -41,6 +42,7 @@ public func append<C: ExtensibleCollectionType>(var collection: C, newElement: C
 public func append<C: ExtensibleCollectionType>(newElement: C.Generator.Element)(collection: C) -> C {
     return append(collection, newElement)
 }
+*/
 
 //
 // MARK: RangeReplaceableCollectionType
@@ -52,7 +54,7 @@ public func replaceRange<R: RangeReplaceableCollectionType, C : CollectionType w
 }
 
 public func replaceRange<R: RangeReplaceableCollectionType, C : CollectionType where C.Generator.Element == R.Generator.Element>(subRange: Range<R.Index>, with newElements: C)(collection: R) -> R {
-    return replaceRange(collection, subRange, with: newElements)
+    return replaceRange(collection, subRange: subRange, with: newElements)
 }
 
 public func insert<R: RangeReplaceableCollectionType>(var collection: R, newElement: R.Generator.Element, atIndex i: R.Index) -> R {
@@ -61,16 +63,16 @@ public func insert<R: RangeReplaceableCollectionType>(var collection: R, newElem
 }
 
 public func insert<R: RangeReplaceableCollectionType>(newElement: R.Generator.Element, atIndex i: R.Index)(collection: R) -> R {
-    return insert(collection, newElement, atIndex: i)
+    return insert(collection, newElement: newElement, atIndex: i)
 }
 
 public func splice<R: RangeReplaceableCollectionType, S : CollectionType where S.Generator.Element == R.Generator.Element>(var collection: R, newElements: S, atIndex i: R.Index) -> R {
-    collection.splice(newElements, atIndex: i)
+    collection.insertContentsOf(newElements, at: i)
     return collection
 }
 
 public func splice<R: RangeReplaceableCollectionType, S : CollectionType where S.Generator.Element == R.Generator.Element>(newElements: S, atIndex i: R.Index)(collection: R) -> R {
-    return splice(collection, newElements, atIndex: i)
+    return splice(collection, newElements: newElements, atIndex: i)
 }
 
 public func removeAtIndex<R: RangeReplaceableCollectionType>(var collection: R, i: R.Index) -> (R, R.Generator.Element) {
@@ -79,7 +81,7 @@ public func removeAtIndex<R: RangeReplaceableCollectionType>(var collection: R, 
 }
 
 public func removeAtIndex<R: RangeReplaceableCollectionType>(i: R.Index)(collection: R) -> (R, R.Generator.Element) {
-    return removeAtIndex(collection, i)
+    return removeAtIndex(collection, i: i)
 }
 
 public func removeRange<R: RangeReplaceableCollectionType>(var collection: R, subRange: Range<R.Index>) -> R {
@@ -88,7 +90,7 @@ public func removeRange<R: RangeReplaceableCollectionType>(var collection: R, su
 }
 
 public func removeRange<R: RangeReplaceableCollectionType>(subRange: Range<R.Index>)(collection: R) -> R {
-    return removeRange(collection, subRange)
+    return removeRange(collection, subRange: subRange)
 }
 
 //
@@ -101,7 +103,7 @@ public func replace<C: MutableCollectionType>(var collection: C, newElement: C.G
 }
 
 public func replace<C: MutableCollectionType>(newElement: C.Generator.Element, atIndex i: C.Index)(collection: C) -> C {
-    return replace(collection, newElement, atIndex: i)
+    return replace(collection, newElement: newElement, atIndex: i)
 }
 
 //
@@ -124,7 +126,7 @@ public func updateValue<T,U>(var dictionary: [T:U], value: U, forKey key: T) -> 
 /// Returns the new dictionary, and the value that was replaced, or `nil` if a new key-value pair
 /// was added.
 public func updateValue<T,U>(value: U, forKey key: T)(dictionary: [T:U]) -> ([T:U], oldValue: U?) {
-    return updateValue(dictionary, value, forKey: key)
+    return updateValue(dictionary, value: value, forKey: key)
 }
 
 /// Returns the `Index` for the given key, or `nil` if the key is not
@@ -152,7 +154,7 @@ public func putNewValue<T,U>(var dictionary: [T:U], value: U, forKey key: T) -> 
 
 /// Puts the given `value` under `key` in `dictionary` unless `key` already exists.
 public func putNewValue<T,U>(value: U, forKey key: T)(dictionary: [T:U]) -> [T:U] {
-    return putNewValue(dictionary, value, forKey: key)
+    return putNewValue(dictionary, value: value, forKey: key)
 }
 
 /// Remove a given key and the associated value from the dictionary.
@@ -167,5 +169,5 @@ public func removeValueForKey<T,U>(var dictionary: [T:U], key: T) -> ([T:U], rem
 /// Returns the updated dictionary and value that was removed, or `nil` if the key was not present
 /// in the dictionary.
 public func removeValueForKey<T,U>(key: T)(dictionary: [T:U]) -> ([T:U], removed: U?) {
-    return removeValueForKey(dictionary, key)
+    return removeValueForKey(dictionary, key: key)
 }
